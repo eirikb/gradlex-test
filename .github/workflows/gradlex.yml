@@ -172,7 +172,7 @@ jobs:
   #      - name: Test build
   #        if: steps.gradlebundle.outputs.cache-hit != 'true'
   #        run: ./gradle-${{ matrix.os }}/bin/gradle --version
-      -
+
       - name: Upload gradle bundle artifact
         uses: actions/upload-artifact@v2
         with:
