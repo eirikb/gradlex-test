@@ -232,6 +232,7 @@ jobs:
             echo A
             ls -lah /o/jdk/bin
             echo B
+            file  /o/jdk/bin/jpackage
             chmod +x /o/jdk/bin/jpackage
             /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
       - name: Upload artifact
