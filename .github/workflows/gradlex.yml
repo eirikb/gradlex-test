@@ -123,22 +123,22 @@ jobs:
       - uses: actions/checkout@v2.1.0
         if: steps.gradlebundle.outputs.cache-hit != 'true'
 
-      - name: Download stage 2
-        uses: actions/download-artifact@v2
-        with:
-          name: gradle
-          path: gradle-7.0
+#            - name: Download stage 2
+#              uses: actions/download-artifact@v2
+#              with:
+#                name: gradle
+#                path: gradle-7.0
 
       #      - uses: actions/cache@v2
       #        with:
       #          path: gradle-7.0
       #          key: gradle43
 
-      - uses: actions/cache@v2
-        id: gradlebundle
-        with:
-          path: gradle
-          key: gradlebundle2-${{ matrix.os }}
+#      - uses: actions/cache@v2
+#        id: gradlebundle
+#        with:
+#          path: gradle
+#          key: gradlebundle2-${{ matrix.os }}
 
       - uses: actions/setup-java@v2
         if: steps.gradlebundle.outputs.cache-hit != 'true'
@@ -158,11 +158,11 @@ jobs:
           ( matrix.os  == 'windows-latest')
         run: jpackage --name gradle -i gradle-7.0\lib --type app-image --main-jar gradle-launcher-7.0.jar
 
-#      - run: mv gradle gradle
-#        if: |
-#          steps.gradlebundle.outputs.cache-hit != 'true' &&
-#          ( matrix.os != 'macos-latest' )
-#        shell: bash
+      #      - run: mv gradle gradle
+      #        if: |
+      #          steps.gradlebundle.outputs.cache-hit != 'true' &&
+      #          ( matrix.os != 'macos-latest' )
+      #        shell: bash
 
       - run: mv gradle.app gradle
         if: |
@@ -172,6 +172,12 @@ jobs:
   #      - name: Test build
   #        if: steps.gradlebundle.outputs.cache-hit != 'true'
   #        run: ./gradle-${{ matrix.os }}/bin/gradle --version
+      -
+      - name: Upload gradle bundle artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: gradlebundle
+          path: gradle
 
 
   C-stage2:
@@ -187,6 +193,12 @@ jobs:
       - uses: actions/checkout@v2.1.0
         if: steps.hashhack.outputs.cache-hit != 'true'
 
+      - name: Download gradlebundle
+        uses: actions/download-artifact@v2
+        with:
+          name: gradlebundle
+          path: gradle
+
       - uses: actions/cache@v2
         id: hashhack
         with:
@@ -199,10 +211,16 @@ jobs:
           path: makeself
           key: makeself
 
-      - uses: actions/cache@v2
-        with:
-          path: gradle
-          key: gradlebundle2-${{ matrix.target }}
+          #      - uses: actions/cache@v2
+          #        with:
+          #          path: gradle
+          #          key: gradlebundle2-${{ matrix.target }}
+
+#      - name: Upload artifact
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: gradlebundle
+#          path: gradle
 
       - name: Build with makeself
         if: steps.hashhack.outputs.cache-hit != 'true'
