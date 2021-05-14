@@ -294,7 +294,7 @@ jobs:
       - name: Download stage 2
         uses: actions/download-artifact@v2
         with:
-          name: hash4_alpine
+          name: hash_alpine
           path: hash
 
       - name: Hash
