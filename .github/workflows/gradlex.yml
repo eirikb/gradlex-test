@@ -161,7 +161,7 @@ jobs:
       - run: |
           rm -rf gradle-7.0
           mv gradle* gradle-${{ matrix.os }}
-        if: steps.gradlebundle.outputs.cache-hit != 'true' &&
+        if: steps.gradlebundle.outputs.cache-hit != 'true'
         shell: bash
 
   #      - name: Test build
