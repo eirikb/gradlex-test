@@ -323,7 +323,7 @@ jobs:
       - name: Download gg
         uses: actions/download-artifact@v2
         with:
-          name: hash4_${{ matrix.os }}
+          name: hash_${{ matrix.os }}
           path: hash
 
       - name: Hash
