@@ -158,12 +158,17 @@ jobs:
           ( matrix.os  == 'windows-latest')
         run: jpackage --name gradle -i gradle-7.0\lib --type app-image --main-jar gradle-launcher-7.0.jar
 
-      - run: |
-          rm -rf gradle-7.0
-          mv gradle* gradle
-        if: steps.gradlebundle.outputs.cache-hit != 'true'
+      - run: mv gradle gradle
+        if: |
+          steps.gradlebundle.outputs.cache-hit != 'true' &&
+          ( matrix.os != 'macos-latest' )
         shell: bash
 
+      - run: mv gradle.app gradle
+        if: |
+          steps.gradlebundle.outputs.cache-hit != 'true' &&
+          ( matrix.os == 'macos-latest' )
+        shell: bash
   #      - name: Test build
   #        if: steps.gradlebundle.outputs.cache-hit != 'true'
   #        run: ./gradle-${{ matrix.os }}/bin/gradle --version
