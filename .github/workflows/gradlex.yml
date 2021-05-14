@@ -116,7 +116,6 @@ jobs:
 
 
   B-gradlebundle-os:
-    if: false
     needs: A-gradle
     strategy:
       matrix:
