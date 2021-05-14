@@ -159,9 +159,9 @@ jobs:
         run: jpackage --name gradle -i gradle-7.0\lib --type app-image --main-jar gradle-launcher-7.0.jar
 
       - run: |
-          ls -lah
-          mv gradle gradle-${{ matrix.os }}
-        if: steps.gradlebundle.outputs.cache-hit != 'true'
+          rm -rf gradle-7.0
+          mv gradle* gradle-${{ matrix.os }}
+        if: steps.gradlebundle.outputs.cache-hit != 'true' &&
         shell: bash
 
   #      - name: Test build
