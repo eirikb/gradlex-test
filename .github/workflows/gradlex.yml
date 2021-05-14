@@ -25,9 +25,6 @@ jobs:
         run: |
           wget https://services.gradle.org/distributions/gradle-7.0-bin.zip
           unzip gradle-7.0-bin.zip
-          ls -lah
-          echo "what"
-          ls -lah
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
@@ -112,6 +109,7 @@ jobs:
 
 
   B-gradlebundle-os:
+    if: false
     needs: A-gradle
     strategy:
       matrix:
@@ -223,10 +221,12 @@ jobs:
 
 
   C-stage2:
-    needs: [ B-gradlebundle-alpine, B-gradlebundle-os ]
+#    needs: [ B-gradlebundle-alpine, B-gradlebundle-os ]
+    needs: [ B-gradlebundle-alpine ]
     strategy:
       matrix:
-        target: [ alpine, ubuntu-latest, macos-latest, windows-latest ]
+#        target: [ alpine, ubuntu-latest, macos-latest, windows-latest ]
+        target: [ alpine ]
 
     runs-on: ubuntu-latest
     steps:
@@ -380,7 +380,8 @@ jobs:
 
 
   E-stage1:
-    needs: [ D-gg-alpine, D-gg-os ]
+#    needs: [ D-gg-alpine, D-gg-os ]
+    needs: [ D-gg-alpine ]
     runs-on: ubuntu-18.04
     steps:
       - name: Source
