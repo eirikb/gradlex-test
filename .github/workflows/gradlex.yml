@@ -166,6 +166,54 @@ jobs:
           path: gradle
 
 
+  B-gradlebundle-run-on-arch:
+    runs-on: ubuntu-18.04
+
+    env:
+      artifact_name: gg_${{ matrix.distro }}_${{ matrix.arch }}
+
+    strategy:
+      matrix:
+        include:
+          - arch: aarch64
+            distro: ubuntu18.04
+    #          - arch: aarch64
+    #            distro: alpine_latest
+    #          - arch: ppc64le
+    #            distro: alpine_latest
+    #          - arch: s390x
+    #            distro: fedora_latest
+
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: uraimo/run-on-arch-action@v2.0.5
+        name: Build artifact
+        id: build
+        with:
+          arch: ${{ matrix.arch }}
+          distro: ${{ matrix.distro }}
+          githubToken: ${{ github.token }}
+
+          setup: |
+            mkdir -p "${PWD}/artifacts"
+          dockerRunArgs: |
+            --volume "${PWD}/artifacts:/artifacts"
+          env: |
+            artifact_name: ${{ env.artifact_name }}
+          shell: /bin/sh
+          install: |
+              apt-get update -q -y
+              apt-get install -q -y build-essential cmake openjdk-jdk
+          run: |
+            echo "yes"
+            jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.artifact_name }}
+          path: artifacts/${{ env.artifact_name }}
+
+
   C-stage2:
     needs: [ B-gradlebundle-alpine, B-gradlebundle-os ]
     strategy:
