@@ -142,15 +142,11 @@ jobs:
           java-version: '14'
 
       - name: Build!
-        if: |
-#          steps.gradlebundle.outputs.cache-hit != 'true' &&
-          ( matrix.os != 'windows-latest')
+        if: ( matrix.os != 'windows-latest')
         run: jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
 
       - name: Build!
-        if: |
-#          steps.gradlebundle.outputs.cache-hit != 'true' &&
-          ( matrix.os  == 'windows-latest')
+        if: ( matrix.os  == 'windows-latest')
         run: jpackage --name gradle -i gradle-7.0\lib --type app-image --main-jar gradle-launcher-7.0.jar
 
       #      - run: mv gradle gradle
@@ -160,9 +156,7 @@ jobs:
       #        shell: bash
 
       - run: mv gradle.app gradle
-        if: |
-#          steps.gradlebundle.outputs.cache-hit != 'true' &&
-          ( matrix.os == 'macos-latest' )
+        if: ( matrix.os == 'macos-latest' )
         shell: bash
       #      - name: Test build
       #        if: steps.gradlebundle.outputs.cache-hit != 'true'
