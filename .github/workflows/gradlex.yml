@@ -29,89 +29,89 @@ jobs:
           echo "what"
           ls -lah
 
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: gradle
-#          path: gradle-7.0
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: gradle
+          path: gradle-7.0
 
-#
-#  A-makeself:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/cache@v2
-#        id: makeself
-#        with:
-#          path: makeself
-#          key: makeself
-#
-#      - name: Install makeself
-#        if: steps.hashhack.outputs.cache-hit != 'true' && steps.makeselfcache.outputs.cache-hit != 'true'
-#        run: |
-#          wget https://github.com/megastep/makeself/releases/download/release-2.4.3/makeself-2.4.3.run
-#          sh makeself-2.4.3.run
-#          mv makeself-2.4.3 makeself
-#
-#
-#  A-image-alpine:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2.1.0
-#        if: steps.my-alpine.outputs.cache-hit != 'true'
-#
-#      - uses: actions/cache@v2
-#        id: my-alpine
-#        with:
-#          path: my-alpine.img
-#          key: my-alpine3
-#
-#      - name: Build my-alpine
-#        if: steps.my-alpine.outputs.cache-hit != 'true'
-#        run: |
-#          docker build my-alpine -t my-alpine
-#          docker save -o my-alpine.img my-alpine
-#
-#
-#  B-gradle-alpine:
-#    if: false
-#    needs: [ A-gradle, A-image-alpine, A-makeself ]
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#        if: steps.gradle-alpine.outputs.cache-hit != 'true'
-#
-#      - uses: actions/cache@v2
-#        if: steps.gradle-alpine.outputs.cache-hit != 'true'
-#        with:
-#          path: gradle-7.0
-#          key: gradle43
-#
-#      - uses: actions/cache@v2
-#        if: steps.gradle-alpine.outputs.cache-hit != 'true'
-#        with:
-#          path: my-alpine.img
-#          key: my-alpine3
-#
-#      - uses: actions/cache@v2
-#        id: gradle-alpine
-#        with:
-#          path: gradle-alpine
-#          key: gradle2-alpine
-#
-#      - run: docker load -i my-alpine.img
-#        if: steps.gradle-alpine.outputs.cache-hit != 'true'
-#
-#      - name: Build!
-#        if: steps.gradle-alpine.outputs.cache-hit != 'true'
-#        run: |
-#          docker run --rm -v $(pwd):/b my-alpine jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
-#          mv gradle gradle-alpine
-#
-#      - name: Test build
-#        if: steps.gradle-alpine.outputs.cache-hit != 'true'
-#        run: docker run --rm -v $(pwd):/b my-alpine ./gradle-alpine/bin/gradle --version
-#
-#
+  #
+  #  A-makeself:
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - uses: actions/cache@v2
+  #        id: makeself
+  #        with:
+  #          path: makeself
+  #          key: makeself
+  #
+  #      - name: Install makeself
+  #        if: steps.hashhack.outputs.cache-hit != 'true' && steps.makeselfcache.outputs.cache-hit != 'true'
+  #        run: |
+  #          wget https://github.com/megastep/makeself/releases/download/release-2.4.3/makeself-2.4.3.run
+  #          sh makeself-2.4.3.run
+  #          mv makeself-2.4.3 makeself
+  #
+  #
+  #  A-image-alpine:
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - uses: actions/checkout@v2.1.0
+  #        if: steps.my-alpine.outputs.cache-hit != 'true'
+  #
+  #      - uses: actions/cache@v2
+  #        id: my-alpine
+  #        with:
+  #          path: my-alpine.img
+  #          key: my-alpine3
+  #
+  #      - name: Build my-alpine
+  #        if: steps.my-alpine.outputs.cache-hit != 'true'
+  #        run: |
+  #          docker build my-alpine -t my-alpine
+  #          docker save -o my-alpine.img my-alpine
+  #
+  #
+  #  B-gradle-alpine:
+  #    if: false
+  #    needs: [ A-gradle, A-image-alpine, A-makeself ]
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - uses: actions/checkout@v2
+  #        if: steps.gradle-alpine.outputs.cache-hit != 'true'
+  #
+  #      - uses: actions/cache@v2
+  #        if: steps.gradle-alpine.outputs.cache-hit != 'true'
+  #        with:
+  #          path: gradle-7.0
+  #          key: gradle43
+  #
+  #      - uses: actions/cache@v2
+  #        if: steps.gradle-alpine.outputs.cache-hit != 'true'
+  #        with:
+  #          path: my-alpine.img
+  #          key: my-alpine3
+  #
+  #      - uses: actions/cache@v2
+  #        id: gradle-alpine
+  #        with:
+  #          path: gradle-alpine
+  #          key: gradle2-alpine
+  #
+  #      - run: docker load -i my-alpine.img
+  #        if: steps.gradle-alpine.outputs.cache-hit != 'true'
+  #
+  #      - name: Build!
+  #        if: steps.gradle-alpine.outputs.cache-hit != 'true'
+  #        run: |
+  #          docker run --rm -v $(pwd):/b my-alpine jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
+  #          mv gradle gradle-alpine
+  #
+  #      - name: Test build
+  #        if: steps.gradle-alpine.outputs.cache-hit != 'true'
+  #        run: docker run --rm -v $(pwd):/b my-alpine ./gradle-alpine/bin/gradle --version
+  #
+  #
   B-gradle-os:
     needs: A-gradle
     strategy:
@@ -122,22 +122,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2.1.0
 
-      - uses: actions/cache@v2
-        with:
-          path: gradle-7.0
-          key: gradle70
-
       - name: test
         shell: bash
         run: |
           ls -lah
           du -sh gradle-7.0
 
-#            - name: Download stage 2
-#              uses: actions/download-artifact@v2
-#              with:
-#                name: gradle
-#                path: gradle-7.0
+      - name: Download gradle
+        uses: actions/download-artifact@v2
+        with:
+          name: gradle
+          path: gradle-7.0
 
 
 ##      - uses: actions/cache@v2
