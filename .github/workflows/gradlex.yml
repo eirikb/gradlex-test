@@ -204,7 +204,7 @@ jobs:
           shell: /bin/sh
           install: |
             apt-get update -q -y
-            apt-get install -q -y build-essential cmake
+            apt-get install -q -y build-essential cmake wget
             wget https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_x64_linux_hotspot_16.0.1_9.tar.gz
             tar xzf OpenJDK16U-jdk_x64_alpine-linux_hotspot_16.0.1_9.tar.gz
             export PATH=/root/jdk-16.0.1+9/bin:$PATH
@@ -304,7 +304,7 @@ jobs:
       - name: Hash
         shell: bash
         run: |
-          hash=$(cat hash/hash_alpine)
+          hash=$(cat hash/hash)
           echo "const char *hash = \"$hash\";" > const.h
 
       - uses: actions/cache@v2
