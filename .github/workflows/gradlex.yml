@@ -81,7 +81,7 @@ jobs:
         id: cache
         with:
           path: gradle
-          key: bgacache1
+          key: bgacache2
 
       - uses: actions/cache@v2
         if: steps.cache.outputs.cache-hit != 'true'
