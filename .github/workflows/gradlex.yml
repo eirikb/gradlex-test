@@ -71,6 +71,7 @@ jobs:
 
 
   B-gradlebundle-alpine:
+    if: false
     needs: [ A-gradle, A-image-alpine, A-makeself ]
     runs-on: ubuntu-latest
     steps:
@@ -116,6 +117,7 @@ jobs:
 
 
   B-gradlebundle-os:
+    if: false
     needs: A-gradle
     strategy:
       matrix:
@@ -177,7 +179,6 @@ jobs:
 
 
   B-gradlebundle-run-on-arch:
-    if: false
     needs: [ A-gradle, A-makeself ]
     runs-on: ubuntu-18.04
 
