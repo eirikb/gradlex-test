@@ -83,13 +83,13 @@ jobs:
         id: cache
         with:
           path: gradle
-          key: bgacache3
+          key: bgacache4
 
       - uses: actions/cache@v2
         if: steps.cache.outputs.cache-hit != 'true'
         with:
           path: gradle-7.0
-          key: gradle44
+          key: gradle45
 
       - uses: actions/cache@v2
         if: steps.cache.outputs.cache-hit != 'true'
@@ -128,7 +128,7 @@ jobs:
         id: cache
         with:
           path: gradle
-          key: bgocache6-${{ matrix.os }}
+          key: bgocache7-${{ matrix.os }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
@@ -248,7 +248,7 @@ jobs:
         id: cache
         with:
           path: hash
-          key: cscache2_${{ matrix.target }}
+          key: cscache3_${{ matrix.target }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
