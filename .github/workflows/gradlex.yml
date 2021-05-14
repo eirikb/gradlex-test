@@ -251,7 +251,7 @@ jobs:
       - name: Rename to hash
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          hash=$(cat hash_${{ matrix.target }})
+          hash=$(cat hash)
           mkdir out
           mv gradlex2 "out/$hash"
 
