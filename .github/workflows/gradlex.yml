@@ -7,6 +7,7 @@ on: [ push, pull_request ]
 # D: Build gg (for each target)
 # E: Build stage 1
 # F: Test (for each target)
+# G: Create release
 
 name: Gradlex!
 jobs:
@@ -165,6 +166,7 @@ jobs:
 
 
   B-gradlebundle-run-on-arch:
+    if: false
     needs: [ A-gradle, A-makeself ]
     runs-on: ubuntu-18.04
 
@@ -221,11 +223,11 @@ jobs:
 
 
   C-stage2:
-#    needs: [ B-gradlebundle-alpine, B-gradlebundle-os ]
+    #    needs: [ B-gradlebundle-alpine, B-gradlebundle-os ]
     needs: [ B-gradlebundle-alpine ]
     strategy:
       matrix:
-#        target: [ alpine, ubuntu-latest, macos-latest, windows-latest ]
+        #        target: [ alpine, ubuntu-latest, macos-latest, windows-latest ]
         target: [ alpine ]
 
     runs-on: ubuntu-latest
@@ -331,6 +333,7 @@ jobs:
 
 
   D-gg-os:
+    if: false
     needs: C-stage2
     strategy:
       matrix:
@@ -380,7 +383,7 @@ jobs:
 
 
   E-stage1:
-#    needs: [ D-gg-alpine, D-gg-os ]
+    #    needs: [ D-gg-alpine, D-gg-os ]
     needs: [ D-gg-alpine ]
     runs-on: ubuntu-18.04
     steps:
