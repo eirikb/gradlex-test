@@ -224,10 +224,14 @@ jobs:
             ls -lah
             mv jdk-16.0.1+9 jdk
             ls -lah
+            ls -lah /o/jdk/bin
           run: |
             echo "yes"
             pwd
             who am i
+            echo A
+            ls -lah /o/jdk/bin
+            echo B
             /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
       - name: Upload artifact
         uses: actions/upload-artifact@v2
