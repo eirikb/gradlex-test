@@ -167,6 +167,7 @@ jobs:
 
 
   B-gradlebundle-run-on-arch:
+    needs: [ A-gradle, A-makeself ]
     runs-on: ubuntu-18.04
 
     env:
@@ -202,8 +203,11 @@ jobs:
             artifact_name: ${{ env.artifact_name }}
           shell: /bin/sh
           install: |
-              apt-get update -q -y
-              apt-get install -q -y build-essential cmake openjdk-jdk
+            apt-get update -q -y
+            apt-get install -q -y build-essential cmake
+            wget https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_x64_linux_hotspot_16.0.1_9.tar.gz
+            tar xzf OpenJDK16U-jdk_x64_alpine-linux_hotspot_16.0.1_9.tar.gz
+            export PATH=/root/jdk-16.0.1+9/bin:$PATH
           run: |
             echo "yes"
             jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
