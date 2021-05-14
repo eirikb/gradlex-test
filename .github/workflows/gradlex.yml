@@ -124,7 +124,7 @@ jobs:
         id: cache
         with:
           path: gradle
-          key: gradlebundle77
+          key: gradlebundle77-${{ matrix.os }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
@@ -196,7 +196,7 @@ jobs:
         id: cache
         with:
           path: hash_${{ matrix.target }}
-          key: hash4_${{ matrix.target }}
+          key: hash5_${{ matrix.target }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
