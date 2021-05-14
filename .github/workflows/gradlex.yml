@@ -72,7 +72,7 @@ jobs:
   #          docker save -o my-alpine.img my-alpine
   #
   #
-  #  B-gradle-alpine:
+  #  B-gradlebundle-alpine:
   #    if: false
   #    needs: [ A-gradle, A-image-alpine, A-makeself ]
   #    runs-on: ubuntu-latest
@@ -112,7 +112,7 @@ jobs:
   #        run: docker run --rm -v $(pwd):/b my-alpine ./gradle-alpine/bin/gradle --version
   #
   #
-  B-gradle-os:
+  B-gradlebundle-os:
     needs: A-gradle
     strategy:
       matrix:
@@ -120,9 +120,17 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
+      - uses: actions/cache@v2
+        id: gradlebundle
+        with:
+          path: gradle
+          key: gradlebundle77
+
       - uses: actions/checkout@v2.1.0
+        if: steps.gradlebundle.outputs.cache-hit != 'true'
 
       - name: Download gradle
+        if: steps.gradlebundle.outputs.cache-hit != 'true'
         uses: actions/download-artifact@v2
         with:
           name: gradle
@@ -136,13 +144,15 @@ jobs:
           ##          key: gradlebundle2-${{ matrix.os }}
           #
       - uses: actions/setup-java@v2
-#        if: steps.gradlebundle.outputs.cache-hit != 'true'
+        if: steps.gradlebundle.outputs.cache-hit != 'true'
         with:
           distribution: 'adopt'
           java-version: '14'
 
       - name: Build!
-        if: ( matrix.os != 'windows-latest')
+        if: |
+          steps.gradlebundle.outputs.cache-hit != 'true' &&
+          ( matrix.os != 'windows-latest')
         run: jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
 
       - name: Build!
@@ -156,13 +166,16 @@ jobs:
       #        shell: bash
 
       - run: mv gradle.app gradle
-        if: ( matrix.os == 'macos-latest' )
+        if: |
+          steps.gradlebundle.outputs.cache-hit != 'true' &&
+          ( matrix.os == 'macos-latest' )
         shell: bash
       #      - name: Test build
       #        if: steps.gradlebundle.outputs.cache-hit != 'true'
       #        run: ./gradle-${{ matrix.os }}/bin/gradle --version
 
       - name: Upload gradle bundle artifact
+        if: steps.gradlebundle.outputs.cache-hit != 'true'
         uses: actions/upload-artifact@v2
         with:
           name: gradlebundle
@@ -170,8 +183,8 @@ jobs:
 
 
   C-stage2:
-    #    needs: [ B-gradle-alpine, B-gradle-os ]
-    needs: [ B-gradle-os ]
+    #    needs: [ B-gradlebundle-alpine, B-gradlebundle-os ]
+    needs: [ B-gradlebundle-os ]
     strategy:
       matrix:
         #        target: [ alpine, ubuntu-latest, macos-latest, windows-latest ]
@@ -246,98 +259,98 @@ jobs:
           container_name: poc
           source_folder: out
 
-#
-#
-#  D-gg-alpine:
-#    if: false
-#    needs: C-stage2
-#    runs-on: ubuntu-latest
-#
-#    env:
-#      artifact_name: gg_alpine_x86
-#
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: Download stage 2
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: hash4_alpine
-#          path: hash
-#
-#      - name: Hash
-#        shell: bash
-#        run: |
-#          hash=$(cat hash/hash_alpine)
-#          echo "const char *hash = \"$hash\";" > const.h
-#
-#      - uses: actions/cache@v2
-#        with:
-#          path: my-alpine.img
-#          key: my-alpine3
-#
-#      - run: docker load -i my-alpine.img
-#
-#      - name: Build!
-#        run: docker run --rm -u $(id -u) -v $(pwd):/b my-alpine sh build-stage1.sh
-#
-#      - name: Rename
-#        run: mv build/gg ./${{ env.artifact_name }}
-#
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: ${{ env.artifact_name }}
-#          path: ${{ env.artifact_name }}
-#
-#
-#  D-gg-os:
-#    needs: C-stage2
-#    strategy:
-#      matrix:
-#        os: [ ubuntu-latest, macos-latest, windows-latest ]
-#
-#    runs-on: ${{ matrix.os }}
-#
-#    env:
-#      artifact_name: gg_${{ matrix.os }}_x86
-#
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: Download gg
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: hash4_${{ matrix.os }}
-#          path: hash
-#
-#      - name: Hash
-#        # ENV -> CMAKE -> Code very hard. This very easy
-#        shell: bash
-#        run: |
-#          hash=$(cat hash/hash)
-#          echo "const char *hash = \"$hash\";" > const.h
-#
-#      - name: Configure CMake
-#        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
-#
-#      - name: Build
-#        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-#
-#      - name: Rename
-#        shell: bash
-#        run: |
-#          if [[ -f "build/gg" ]]; then
-#            mv build/gg ./${{ env.artifact_name }}
-#          else
-#            mv build/Debug/gg.exe ./${{ env.artifact_name }}
-#          fi
-#
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: ${{ env.artifact_name }}
-#          path: ${{ env.artifact_name }}
+  #
+  #
+  #  D-gg-alpine:
+  #    if: false
+  #    needs: C-stage2
+  #    runs-on: ubuntu-latest
+  #
+  #    env:
+  #      artifact_name: gg_alpine_x86
+  #
+  #    steps:
+  #      - uses: actions/checkout@v2
+  #
+  #      - name: Download stage 2
+  #        uses: actions/download-artifact@v2
+  #        with:
+  #          name: hash4_alpine
+  #          path: hash
+  #
+  #      - name: Hash
+  #        shell: bash
+  #        run: |
+  #          hash=$(cat hash/hash_alpine)
+  #          echo "const char *hash = \"$hash\";" > const.h
+  #
+  #      - uses: actions/cache@v2
+  #        with:
+  #          path: my-alpine.img
+  #          key: my-alpine3
+  #
+  #      - run: docker load -i my-alpine.img
+  #
+  #      - name: Build!
+  #        run: docker run --rm -u $(id -u) -v $(pwd):/b my-alpine sh build-stage1.sh
+  #
+  #      - name: Rename
+  #        run: mv build/gg ./${{ env.artifact_name }}
+  #
+  #      - name: Upload artifact
+  #        uses: actions/upload-artifact@v2
+  #        with:
+  #          name: ${{ env.artifact_name }}
+  #          path: ${{ env.artifact_name }}
+  #
+  #
+  D-gg-os:
+    needs: C-stage2
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      artifact_name: gg_${{ matrix.os }}_x86
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download gg
+        uses: actions/download-artifact@v2
+        with:
+          name: hash4_${{ matrix.os }}
+          path: hash
+
+      - name: Hash
+        # ENV -> CMAKE -> Code very hard. This very easy
+        shell: bash
+        run: |
+          hash=$(cat hash/hash)
+          echo "const char *hash = \"$hash\";" > const.h
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+      - name: Rename
+        shell: bash
+        run: |
+          if [[ -f "build/gg" ]]; then
+            mv build/gg ./${{ env.artifact_name }}
+          else
+            mv build/Debug/gg.exe ./${{ env.artifact_name }}
+          fi
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.artifact_name }}
+          path: ${{ env.artifact_name }}
 #
 #
 #  E-stage1:
