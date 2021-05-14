@@ -135,128 +135,128 @@ jobs:
           du -sh gradle-7.0
 
 
-##      - uses: actions/cache@v2
-##        id: gradlebundle
-##        with:
-##          path: gradle
-##          key: gradlebundle2-${{ matrix.os }}
-#
-#      - uses: actions/setup-java@v2
-#        if: steps.gradlebundle.outputs.cache-hit != 'true'
-#        with:
-#          distribution: 'adopt'
-#          java-version: '14'
-#
-#      - name: Build!
-#        if: |
-#          steps.gradlebundle.outputs.cache-hit != 'true' &&
-#          ( matrix.os != 'windows-latest')
-#        run: jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
-#
-#      - name: Build!
-#        if: |
-#          steps.gradlebundle.outputs.cache-hit != 'true' &&
-#          ( matrix.os  == 'windows-latest')
-#        run: jpackage --name gradle -i gradle-7.0\lib --type app-image --main-jar gradle-launcher-7.0.jar
-#
-#      #      - run: mv gradle gradle
-#      #        if: |
-#      #          steps.gradlebundle.outputs.cache-hit != 'true' &&
-#      #          ( matrix.os != 'macos-latest' )
-#      #        shell: bash
-#
-#      - run: mv gradle.app gradle
-#        if: |
-#          steps.gradlebundle.outputs.cache-hit != 'true' &&
-#          ( matrix.os == 'macos-latest' )
-#        shell: bash
-#  #      - name: Test build
-#  #        if: steps.gradlebundle.outputs.cache-hit != 'true'
-#  #        run: ./gradle-${{ matrix.os }}/bin/gradle --version
-#
-#      - name: Upload gradle bundle artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: gradlebundle
-#          path: gradle
-#
-#
-#  C-stage2:
-#    #    needs: [ B-gradle-alpine, B-gradle-os ]
-#    needs: [ B-gradle-os ]
-#    strategy:
-#      matrix:
-#        #        target: [ alpine, ubuntu-latest, macos-latest, windows-latest ]
-#        target: [ ubuntu-latest, macos-latest, windows-latest ]
-#
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2.1.0
-#        if: steps.hashhack.outputs.cache-hit != 'true'
-#
-#      - name: Download gradlebundle
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: gradlebundle
-#          path: gradle
-#
-#      - uses: actions/cache@v2
-#        id: hashhack
-#        with:
-#          path: hash_${{ matrix.target }}
-#          key: hash4_${{ matrix.target }}
-#
-#      - uses: actions/cache@v2
-#        if: steps.hashhack.outputs.cache-hit != 'true'
-#        with:
-#          path: makeself
-#          key: makeself
-#
-#          #      - uses: actions/cache@v2
-#          #        with:
-#          #          path: gradle
-#          #          key: gradlebundle2-${{ matrix.target }}
-#
-##      - name: Upload artifact
-##        uses: actions/upload-artifact@v2
-##        with:
-##          name: gradlebundle
-##          path: gradle
-#
-#      - name: Build with makeself
-#        if: steps.hashhack.outputs.cache-hit != 'true'
-#        run: |
-#          ls -lah
-#          mkdir yes
-#          cp stage2.sh yes
-#          mv gradle* yes/gradle
-#          ./makeself/makeself.sh yes gradlex2 gradlex2 sh stage2.sh
-#
-#      - name: Hash!
-#        if: steps.hashhack.outputs.cache-hit != 'true'
-#        run: |
-#          gcc -o print_hash print_hash.c
-#          ./print_hash gradlex2 > hash_${{ matrix.target }}
-#
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: hash_${{ matrix.target }}
-#          path: hash4_${{ matrix.target }}
-#
-#      - name: Rename to hash
-#        if: steps.hashhack.outputs.cache-hit != 'true'
-#        run: |
-#          hash=$(cat hash_${{ matrix.target }})
-#          mkdir out
-#          mv gradlex2 "out/$hash"
-#
-#      - uses: LanceMcCarthy/Action-AzureBlobUpload@v1.9.0
-#        if: steps.hashhack.outputs.cache-hit != 'true'
-#        with:
-#          connection_string: ${{ secrets.ConnectionString }}
-#          container_name: poc
-#          source_folder: out
+  ##      - uses: actions/cache@v2
+  ##        id: gradlebundle
+  ##        with:
+  ##          path: gradle
+  ##          key: gradlebundle2-${{ matrix.os }}
+  #
+  #      - uses: actions/setup-java@v2
+  #        if: steps.gradlebundle.outputs.cache-hit != 'true'
+  #        with:
+  #          distribution: 'adopt'
+  #          java-version: '14'
+  #
+  #      - name: Build!
+  #        if: |
+  #          steps.gradlebundle.outputs.cache-hit != 'true' &&
+  #          ( matrix.os != 'windows-latest')
+  #        run: jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
+  #
+  #      - name: Build!
+  #        if: |
+  #          steps.gradlebundle.outputs.cache-hit != 'true' &&
+  #          ( matrix.os  == 'windows-latest')
+  #        run: jpackage --name gradle -i gradle-7.0\lib --type app-image --main-jar gradle-launcher-7.0.jar
+  #
+  #      #      - run: mv gradle gradle
+  #      #        if: |
+  #      #          steps.gradlebundle.outputs.cache-hit != 'true' &&
+  #      #          ( matrix.os != 'macos-latest' )
+  #      #        shell: bash
+  #
+  #      - run: mv gradle.app gradle
+  #        if: |
+  #          steps.gradlebundle.outputs.cache-hit != 'true' &&
+  #          ( matrix.os == 'macos-latest' )
+  #        shell: bash
+  #  #      - name: Test build
+  #  #        if: steps.gradlebundle.outputs.cache-hit != 'true'
+  #  #        run: ./gradle-${{ matrix.os }}/bin/gradle --version
+  #
+  #      - name: Upload gradle bundle artifact
+  #        uses: actions/upload-artifact@v2
+  #        with:
+  #          name: gradlebundle
+  #          path: gradle
+  #
+  #
+  C-stage2:
+    #    needs: [ B-gradle-alpine, B-gradle-os ]
+    needs: [ B-gradle-os ]
+    strategy:
+      matrix:
+        #        target: [ alpine, ubuntu-latest, macos-latest, windows-latest ]
+        target: [ ubuntu-latest, macos-latest, windows-latest ]
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.1.0
+        if: steps.hashhack.outputs.cache-hit != 'true'
+
+      - name: Download gradlebundle
+        uses: actions/download-artifact@v2
+        with:
+          name: gradlebundle
+          path: gradle
+
+      - uses: actions/cache@v2
+        id: hashhack
+        with:
+          path: hash_${{ matrix.target }}
+          key: hash4_${{ matrix.target }}
+
+      - uses: actions/cache@v2
+        if: steps.hashhack.outputs.cache-hit != 'true'
+        with:
+          path: makeself
+          key: makeself
+
+          #      - uses: actions/cache@v2
+          #        with:
+          #          path: gradle
+          #          key: gradlebundle2-${{ matrix.target }}
+
+      #      - name: Upload artifact
+      #        uses: actions/upload-artifact@v2
+      #        with:
+      #          name: gradlebundle
+      #          path: gradle
+
+      - name: Build with makeself
+        if: steps.hashhack.outputs.cache-hit != 'true'
+        run: |
+          ls -lah
+          mkdir yes
+          cp stage2.sh yes
+          mv gradle* yes/gradle
+          ./makeself/makeself.sh yes gradlex2 gradlex2 sh stage2.sh
+
+      - name: Hash!
+        if: steps.hashhack.outputs.cache-hit != 'true'
+        run: |
+          gcc -o print_hash print_hash.c
+          ./print_hash gradlex2 > hash_${{ matrix.target }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: hash_${{ matrix.target }}
+          path: hash4_${{ matrix.target }}
+
+      - name: Rename to hash
+        if: steps.hashhack.outputs.cache-hit != 'true'
+        run: |
+          hash=$(cat hash_${{ matrix.target }})
+          mkdir out
+          mv gradlex2 "out/$hash"
+
+      - uses: LanceMcCarthy/Action-AzureBlobUpload@v1.9.0
+        if: steps.hashhack.outputs.cache-hit != 'true'
+        with:
+          connection_string: ${{ secrets.ConnectionString }}
+          container_name: poc
+          source_folder: out
 #
 #
 #  D-gg-alpine:
