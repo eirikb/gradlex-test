@@ -95,12 +95,6 @@ jobs:
           path: my-alpine.img
           key: my-alpine4
 
-      - uses: actions/cache@v2
-        if: steps.cache.outputs.cache-hit != 'true'
-        with:
-          path: gradle-alpine
-          key: gradle2-alpine
-
       - run: docker load -i my-alpine.img
         if: steps.cache.outputs.cache-hit != 'true'
 
@@ -108,11 +102,10 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           docker run --rm -u $(id -u) -v $(pwd):/b my-alpine /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
-          mv gradle gradle-alpine
 
       - name: Test build
         if: steps.cache.outputs.cache-hit != 'true'
-        run: docker run --rm -u $(id -u) -v $(pwd):/b my-alpine ./gradle-alpine/bin/gradle --version
+        run: docker run --rm -u $(id -u) -v $(pwd):/b my-alpine ./gradle/bin/gradle --version
 
       - name: Upload gradle bundle artifact
         uses: actions/upload-artifact@v2
