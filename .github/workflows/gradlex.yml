@@ -245,6 +245,7 @@ jobs:
           connection_string: ${{ secrets.ConnectionString }}
           container_name: poc
           source_folder: out
+
 #
 #
 #  D-gg-alpine:
