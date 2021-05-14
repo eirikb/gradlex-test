@@ -107,12 +107,12 @@ jobs:
       - name: Build!
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          docker run --rm -v $(pwd):/b my-alpine jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
+          docker run --rm -u $(id -u) -v $(pwd):/b my-alpine jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
           mv gradle gradle-alpine
 
       - name: Test build
         if: steps.cache.outputs.cache-hit != 'true'
-        run: docker run --rm -v $(pwd):/b my-alpine ./gradle-alpine/bin/gradle --version
+        run: docker run --rm -u $(id -u) -v $(pwd):/b my-alpine ./gradle-alpine/bin/gradle --version
 
       - name: Upload gradle bundle artifact
         uses: actions/upload-artifact@v2
