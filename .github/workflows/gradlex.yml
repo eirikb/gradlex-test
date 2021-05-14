@@ -120,7 +120,8 @@ jobs:
     needs: A-gradle
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        #        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ macos-latest ]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -128,7 +129,7 @@ jobs:
         id: cache
         with:
           path: gradle
-          key: bgocache1-${{ matrix.os }}
+          key: bgocache2-${{ matrix.os }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
@@ -158,7 +159,13 @@ jobs:
           ( matrix.os  == 'windows-latest')
         run: jpackage --name gradle -i gradle-7.0\lib --type app-image --main-jar gradle-launcher-7.0.jar
 
-      - run: mv gradle.app gradle
+      - run: |
+          ls -lah
+          echo " BEFORE!"
+          du -a
+          echo " AFTER!"
+          mv gradle.app gradle
+
         if: |
           steps.cache.outputs.cache-hit != 'true' &&
           ( matrix.os == 'macos-latest' )
@@ -234,7 +241,8 @@ jobs:
     strategy:
       matrix:
         #        target: [ alpine, ubuntu-latest, macos-latest, windows-latest ]
-        target: [ ubuntu-latest, macos-latest, windows-latest ]
+        #        target: [ ubuntu-latest, macos-latest, windows-latest ]
+        target: [ macos-latest ]
 
     runs-on: ubuntu-latest
     steps:
@@ -343,7 +351,8 @@ jobs:
     needs: C-stage2
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        #        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ macos-latest ]
 
     runs-on: ${{ matrix.os }}
 
@@ -443,7 +452,8 @@ jobs:
     needs: E-stage1
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        #        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ macos-latest ]
 
     runs-on: ${{ matrix.os }}
     steps:
