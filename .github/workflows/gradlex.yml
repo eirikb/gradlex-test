@@ -203,6 +203,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Download gradlebundle
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/download-artifact@v2
         with:
           name: gradlebundle
@@ -239,13 +240,13 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           gcc -o print_hash print_hash.c
-          ./print_hash gradlex2 > hash_${{ matrix.target }}
+          ./print_hash gradlex2 > hash
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: hash_${{ matrix.target }}
-          path: hash_${{ matrix.target }}
+          path: hash
 
       - name: Rename to hash
         if: steps.cache.outputs.cache-hit != 'true'
