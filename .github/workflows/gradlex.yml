@@ -162,7 +162,7 @@ jobs:
       - run: |
           mv gradle.app gradle
           mkdir gradle/bin
-          echo '../Contents/MacOS/gradle $1' > gradle/bin/gradle
+          echo './gradle/Contents/MacOS/gradle $1' > gradle/bin/gradle
           echo "test"
           chmod +x ./gradle/bin/gradle
           ./gradle/bin/gradle --version
