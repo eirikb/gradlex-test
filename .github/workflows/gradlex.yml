@@ -196,7 +196,7 @@ jobs:
         id: cache
         with:
           path: hash_${{ matrix.target }}
-          key: hash5_${{ matrix.target }}
+          key: hash_${{ matrix.target }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
@@ -244,7 +244,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: hash_${{ matrix.target }}
-          path: hash4_${{ matrix.target }}
+          path: hash_${{ matrix.target }}
 
       - name: Rename to hash
         if: steps.cache.outputs.cache-hit != 'true'
