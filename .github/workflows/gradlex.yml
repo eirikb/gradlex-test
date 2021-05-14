@@ -15,13 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/cache@v2
-        id: gradlecache
+        id: cache
         with:
           path: gradle-7.0
-          key: gradle70
+          key: gradlecache1
 
       - name: Download and unzip Gradle
-        if: steps.gradlecache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           wget https://services.gradle.org/distributions/gradle-7.0-bin.zip
           unzip gradle-7.0-bin.zip
@@ -46,7 +46,7 @@ jobs:
   #          key: makeself
   #
   #      - name: Install makeself
-  #        if: steps.hashhack.outputs.cache-hit != 'true' && steps.makeselfcache.outputs.cache-hit != 'true'
+  #        if: steps.cache.outputs.cache-hit != 'true' && steps.makeselfcache.outputs.cache-hit != 'true'
   #        run: |
   #          wget https://github.com/megastep/makeself/releases/download/release-2.4.3/makeself-2.4.3.run
   #          sh makeself-2.4.3.run
@@ -121,16 +121,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/cache@v2
-        id: gradlebundle
+        id: cache
         with:
           path: gradle
           key: gradlebundle77
 
       - uses: actions/checkout@v2.1.0
-        if: steps.gradlebundle.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Download gradle
-        if: steps.gradlebundle.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/download-artifact@v2
         with:
           name: gradle
@@ -144,14 +144,14 @@ jobs:
           ##          key: gradlebundle2-${{ matrix.os }}
           #
       - uses: actions/setup-java@v2
-        if: steps.gradlebundle.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         with:
           distribution: 'adopt'
           java-version: '14'
 
       - name: Build!
         if: |
-          steps.gradlebundle.outputs.cache-hit != 'true' &&
+          steps.cache.outputs.cache-hit != 'true' &&
           ( matrix.os != 'windows-latest')
         run: jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
 
@@ -167,7 +167,7 @@ jobs:
 
       - run: mv gradle.app gradle
         if: |
-          steps.gradlebundle.outputs.cache-hit != 'true' &&
+          steps.cache.outputs.cache-hit != 'true' &&
           ( matrix.os == 'macos-latest' )
         shell: bash
       #      - name: Test build
@@ -175,7 +175,7 @@ jobs:
       #        run: ./gradle-${{ matrix.os }}/bin/gradle --version
 
       - name: Upload gradle bundle artifact
-        if: steps.gradlebundle.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/upload-artifact@v2
         with:
           name: gradlebundle
@@ -192,8 +192,14 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: hash_${{ matrix.target }}
+          key: hash4_${{ matrix.target }}
+
       - uses: actions/checkout@v2.1.0
-        if: steps.hashhack.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Download gradlebundle
         uses: actions/download-artifact@v2
@@ -201,14 +207,9 @@ jobs:
           name: gradlebundle
           path: gradle
 
-      - uses: actions/cache@v2
-        id: hashhack
-        with:
-          path: hash_${{ matrix.target }}
-          key: hash4_${{ matrix.target }}
 
       - uses: actions/cache@v2
-        if: steps.hashhack.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         with:
           path: makeself
           key: makeself
@@ -225,7 +226,7 @@ jobs:
       #          path: gradle
 
       - name: Build with makeself
-        if: steps.hashhack.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           ls -lah
           mkdir yes
@@ -234,7 +235,7 @@ jobs:
           ./makeself/makeself.sh yes gradlex2 gradlex2 sh stage2.sh
 
       - name: Hash!
-        if: steps.hashhack.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           gcc -o print_hash print_hash.c
           ./print_hash gradlex2 > hash_${{ matrix.target }}
@@ -246,14 +247,14 @@ jobs:
           path: hash4_${{ matrix.target }}
 
       - name: Rename to hash
-        if: steps.hashhack.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           hash=$(cat hash_${{ matrix.target }})
           mkdir out
           mv gradlex2 "out/$hash"
 
       - uses: LanceMcCarthy/Action-AzureBlobUpload@v1.9.0
-        if: steps.hashhack.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
         with:
           connection_string: ${{ secrets.ConnectionString }}
           container_name: poc
