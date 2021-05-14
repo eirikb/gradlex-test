@@ -196,8 +196,8 @@ jobs:
       - uses: actions/cache@v2
         id: cache
         with:
-          path: hash_${{ matrix.target }}
-          key: hash_${{ matrix.target }}
+          path: hash
+          key: hash77_${{ matrix.target }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
