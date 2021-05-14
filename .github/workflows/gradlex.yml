@@ -129,7 +129,7 @@ jobs:
         id: cache
         with:
           path: gradle
-          key: bgocache5-${{ matrix.os }}
+          key: bgocache6-${{ matrix.os }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
@@ -160,18 +160,9 @@ jobs:
         run: jpackage --name gradle -i gradle-7.0\lib --type app-image --main-jar gradle-launcher-7.0.jar
 
       - run: |
-          ls -lah
-          echo " BEFORE!"
-          du -a
-          echo " AFTER!"
           mv gradle.app gradle
-          mkdir gradle/bin
-          cp gradle/Contents/MacOS/gradle gradle/bin/gradle
-          file gradle/bin/gradle
-          echo "test A"
           ./gradle/Contents/MacOS/gradle --version
-          echo "test B"
-          ./gradle/bin/gradle --version
+          echo '../Contents/MacOS/gradle $1' > gradle/bin/gradle
         if: |
           steps.cache.outputs.cache-hit != 'true' &&
           ( matrix.os == 'macos-latest' )
