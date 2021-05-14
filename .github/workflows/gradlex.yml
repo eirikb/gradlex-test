@@ -138,7 +138,7 @@ jobs:
         id: gradlebundle
         with:
           path: gradle
-          key: gradlebundle
+          key: gradlebundle-${{ matrix.os }}
 
       - uses: actions/setup-java@v2
         if: steps.gradlebundle.outputs.cache-hit != 'true'
@@ -194,8 +194,8 @@ jobs:
 
       - uses: actions/cache@v2
         with:
-          path: gradle-${{ matrix.target }}
-          key: gradle2-${{ matrix.target }}
+          path: gradle
+          key: gradlebundle-${{ matrix.target }}
 
       - name: Build with makeself
         if: steps.hashhack.outputs.cache-hit != 'true'
