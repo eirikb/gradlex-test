@@ -156,7 +156,9 @@ jobs:
         run: jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
 
       - name: Build!
-        if: ( matrix.os  == 'windows-latest')
+        if: |
+          steps.cache.outputs.cache-hit != 'true' &&
+          ( matrix.os  == 'windows-latest')
         run: jpackage --name gradle -i gradle-7.0\lib --type app-image --main-jar gradle-launcher-7.0.jar
 
       #      - run: mv gradle gradle
