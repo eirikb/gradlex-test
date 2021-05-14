@@ -108,6 +108,12 @@ jobs:
         if: steps.gradle-alpine.outputs.cache-hit != 'true'
         run: docker run --rm -v $(pwd):/b my-alpine ./gradle-alpine/bin/gradle --version
 
+      - name: Upload gradle bundle artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: gradlebundle_alpine
+          path: gradle
+
 
   B-gradlebundle-os:
     if: false
@@ -161,7 +167,7 @@ jobs:
       - name: Upload gradle bundle artifact
         uses: actions/upload-artifact@v2
         with:
-          name: gradlebundle
+          name: gradlebundle_${{ matrix.os }}
           path: gradle
 
 
@@ -245,7 +251,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         uses: actions/download-artifact@v2
         with:
-          name: gradlebundle
+          name: gradlebundle_${{ matrix.target }}
           path: gradle
 
       - uses: actions/cache@v2
