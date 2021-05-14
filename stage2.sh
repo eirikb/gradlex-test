@@ -6,8 +6,6 @@ echo "You should now have gradle-7.0 installed in .gradle"
 echo "Press enter to start gradle:"
 read
 cd "$1"
-ls
-pwd
-ls .gradle
+du -a .gradle/bin
 chmod +x ./.gradle/bin/gradle
 ./.gradle/bin/gradle $2
