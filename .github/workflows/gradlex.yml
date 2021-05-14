@@ -162,7 +162,10 @@ jobs:
       - run: |
           mv gradle.app gradle
           ./gradle/Contents/MacOS/gradle --version
+          mkdir gradle/bin
           echo '../Contents/MacOS/gradle $1' > gradle/bin/gradle
+          echo "test"
+          ./gradle/bin/gradle --version
         if: |
           steps.cache.outputs.cache-hit != 'true' &&
           ( matrix.os == 'macos-latest' )
