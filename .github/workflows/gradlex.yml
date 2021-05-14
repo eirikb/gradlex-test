@@ -160,7 +160,7 @@ jobs:
 
       - run: |
           rm -rf gradle-7.0
-          mv gradle* gradle-${{ matrix.os }}
+          mv gradle* gradle
         if: steps.gradlebundle.outputs.cache-hit != 'true'
         shell: bash
 
