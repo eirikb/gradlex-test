@@ -61,7 +61,7 @@ jobs:
         id: my-alpine
         with:
           path: my-alpine.img
-          key: my-alpine3
+          key: my-alpine4
 
       - name: Build my-alpine
         if: steps.my-alpine.outputs.cache-hit != 'true'
@@ -93,7 +93,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         with:
           path: my-alpine.img
-          key: my-alpine3
+          key: my-alpine4
 
       - uses: actions/cache@v2
         if: steps.cache.outputs.cache-hit != 'true'
@@ -107,7 +107,7 @@ jobs:
       - name: Build!
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          docker run --rm -u $(id -u) -v $(pwd):/b my-alpine jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
+          docker run --rm -u $(id -u) -v $(pwd):/b my-alpine /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
           mv gradle gradle-alpine
 
       - name: Test build
@@ -327,7 +327,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: my-alpine.img
-          key: my-alpine3
+          key: my-alpine4
 
       - run: docker load -i my-alpine.img
 
