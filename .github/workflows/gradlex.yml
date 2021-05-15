@@ -180,20 +180,17 @@ jobs:
 
   B-gradlebundle-run-on-arch:
     needs: [ A-gradle, A-makeself ]
-    # The host should always be linux
     runs-on: ubuntu-18.04
-    name: Build on ${{ matrix.distro }} ${{ matrix.arch }}
 
-    # Run steps on a matrix of 3 arch/distro combinations
     strategy:
       matrix:
         include:
           - arch: aarch64
-            distro: ubuntu18.04
-          - arch: ppc64le
-            distro: alpine_latest
-          - arch: s390x
-            distro: fedora_latest
+            distro: buster
+    #          - arch: ppc64le
+    #            distro: alpine_latest
+    #          - arch: s390x
+    #            distro: fedora_latest
 
     steps:
       - uses: actions/checkout@v2.1.0
@@ -204,35 +201,27 @@ jobs:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
 
-          # Not required, but speeds up builds
           githubToken: ${{ github.token }}
 
-          # Create an artifacts directory
           setup: |
             mkdir -p "${PWD}/artifacts"
 
-          # Mount the artifacts directory as /artifacts in the container
           dockerRunArgs: |
             --volume "${PWD}/artifacts:/artifacts"
 
-          # Pass some environment variables to the container
-          env: | # YAML, but pipe character is necessary
+          env: |
             artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
 
-          # The shell to run commands with in the container
           shell: /bin/sh
 
-          # Install some dependencies in the container. This speeds up builds if
-          # you are also using githubToken. Any dependencies installed here will
-          # be part of the container image that gets cached, so subsequent
-          # builds don't have to re-install them. The image layer is cached
-          # publicly in your project's package repository, so it is vital that
-          # no secrets are present in the container state or logs.
           install: |
             case "${{ matrix.distro }}" in
               ubuntu*|jessie|stretch|buster)
                 apt-get update -q -y
-                apt-get install -q -y git
+                apt-get install -q -y git build-esential cmake wget
+                wget https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
+                tar xzf OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
+                jls -lah
                 ;;
               fedora*)
                 dnf -y update
@@ -244,14 +233,11 @@ jobs:
                 ;;
             esac
 
-          # Produce a binary artifact and place it in the mounted volume
           run: |
             cp $(which git) "/artifacts/${artifact_name}"
             echo "Produced artifact at /artifacts/${artifact_name}"
 
       - name: Show the artifact
-        # Items placed in /artifacts in the container will be in
-        # ${PWD}/artifacts on the host.
         run: |
           ls -al "${PWD}/artifacts"
 
