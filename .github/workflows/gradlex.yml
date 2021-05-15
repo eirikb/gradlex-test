@@ -239,6 +239,9 @@ jobs:
             echo Y
             chmod +x /o/jdk/bin/jpackage
             ldd /o/jdk/bin/jpackage
+            echo "LET US GO!"
+            cd /wat
+            /o/jdk/bin/jpackage --name gradle -i /wat/gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
           run: |
             echo "yes"
             uname -a
