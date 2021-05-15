@@ -233,6 +233,7 @@ jobs:
                 mkdir /o
                 mv jdk-16.0.1+9 /o/jdk
                 echo OK
+                which objcopy
                 ;;
               fedora*)
                 dnf -y update
@@ -245,6 +246,8 @@ jobs:
             esac
 
           run: |
+            echo YES
+            which objcopy
             cd /wat
             /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
 
