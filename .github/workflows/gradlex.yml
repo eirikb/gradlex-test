@@ -189,11 +189,11 @@ jobs:
       matrix:
         include:
           - arch: aarch64
-            distro: ubuntu18.04
+            distro: ubuntu_latest
           - arch: aarch64
-            distro: alpine_latest
+            distro: ubuntu_latest
           - arch: ppc64le
-            distro: alpine_latest
+            distro: ubuntu_latest
     #          - arch: s390x
     #            distro: fedora_latest
 
