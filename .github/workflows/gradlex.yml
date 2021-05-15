@@ -239,7 +239,7 @@ jobs:
             du -sh /o/jdk/
             cp $(which git) "/artifacts/${artifact_name}"
             echo "Produced artifact at /artifacts/${artifact_name}"
-            /o/jdk/bin/jpackage
+            /o/jdk/bin/jpackage --name gradle -i /wat/gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
 
       - name: Show the artifact
         run: |
