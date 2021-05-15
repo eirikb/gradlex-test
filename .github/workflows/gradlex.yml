@@ -239,8 +239,6 @@ jobs:
             echo Y
             chmod +x /o/jdk/bin/jpackage
             ldd /o/jdk/bin/jpackage
-            echo GO
-            /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
           run: |
             echo "yes"
             pwd
