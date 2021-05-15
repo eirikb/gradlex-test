@@ -199,6 +199,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2.1.0
+
+      - name: Download gradle
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/download-artifact@v2
+        with:
+          name: gradle
+          path: gradle-7.0
+
       - uses: uraimo/run-on-arch-action@v2.0.5
         name: Build artifact
         id: build
@@ -243,7 +251,12 @@ jobs:
             echo C
             du -sh /o/jdk/bin/jpackage
             file /o/jdk/bin/jpackage
-            chmod +x /o/jdk/bin/jpackage
+            echo "where"
+            pwd
+            echo "files"
+            ls -lah
+            echo "find"
+            find / -name gradle
             /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
       - name: Upload artifact
         uses: actions/upload-artifact@v2
