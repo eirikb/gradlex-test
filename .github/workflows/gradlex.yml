@@ -240,7 +240,6 @@ jobs:
             chmod +x /o/jdk/bin/jpackage
             ldd /o/jdk/bin/jpackage
             echo "LET US GO!"
-            cd /wat
           run: |
             echo "yes"
             uname -a
