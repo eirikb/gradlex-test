@@ -239,6 +239,7 @@ jobs:
             du -sh /o/jdk/
             cp $(which git) "/artifacts/${artifact_name}"
             echo "Produced artifact at /artifacts/${artifact_name}"
+            /o/jdk/bin/jpackage
 
       - name: Show the artifact
         run: |
