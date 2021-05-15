@@ -188,8 +188,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - arch: aarch64
-            distro: armv7
+          - arch: armv7
+            distro: buster
 #          - arch: aarch64
 #            distro: ubuntu18.04
 #          - arch: ppc64le
