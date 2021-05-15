@@ -180,94 +180,80 @@ jobs:
 
   B-gradlebundle-run-on-arch:
     needs: [ A-gradle, A-makeself ]
+    # The host should always be linux
     runs-on: ubuntu-18.04
+    name: Build on ${{ matrix.distro }} ${{ matrix.arch }}
 
-    env:
-      artifact_name: gg_${{ matrix.distro }}_${{ matrix.arch }}
-
+    # Run steps on a matrix of 3 arch/distro combinations
     strategy:
       matrix:
         include:
           - arch: aarch64
-            distro: buster
-#          - arch: aarch64
-#            distro: ubuntu18.04
-#          - arch: ppc64le
-#            distro: ubuntu18.04
-    #          - arch: s390x
-    #            distro: fedora_latest
+            distro: ubuntu18.04
+          - arch: ppc64le
+            distro: alpine_latest
+          - arch: s390x
+            distro: fedora_latest
 
     steps:
       - uses: actions/checkout@v2.1.0
-
-      - name: Download gradle
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: actions/download-artifact@v2
-        with:
-          name: gradle
-          path: gradle-7.0
-
       - uses: uraimo/run-on-arch-action@v2.0.5
         name: Build artifact
         id: build
         with:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
+
+          # Not required, but speeds up builds
           githubToken: ${{ github.token }}
 
+          # Create an artifacts directory
           setup: |
             mkdir -p "${PWD}/artifacts"
+
+          # Mount the artifacts directory as /artifacts in the container
           dockerRunArgs: |
             --volume "${PWD}/artifacts:/artifacts"
-            --volume "${PWD}:/wat"
-          env: |
-            artifact_name: ${{ env.artifact_name }}
+
+          # Pass some environment variables to the container
+          env: | # YAML, but pipe character is necessary
+            artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
+
+          # The shell to run commands with in the container
           shell: /bin/sh
+
+          # Install some dependencies in the container. This speeds up builds if
+          # you are also using githubToken. Any dependencies installed here will
+          # be part of the container image that gets cached, so subsequent
+          # builds don't have to re-install them. The image layer is cached
+          # publicly in your project's package repository, so it is vital that
+          # no secrets are present in the container state or logs.
           install: |
-            apt-get update -q -y
-            apt-get install -q -y build-essential cmake wget
-            mkdir /o
-            cd /o
-            wget https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
-            tar xzf OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
-            ls -lah
-            mv jdk-16.0.1+9 jdk
-            ls -lah
-            ls -lah /o/jdk/bin
-            echo X
-            du -b /o/jdk/bin/jpackage
-            echo Y
-            chmod +x /o/jdk/bin/jpackage
-            ldd /o/jdk/bin/jpackage
-            echo "LET US GO!"
+            case "${{ matrix.distro }}" in
+              ubuntu*|jessie|stretch|buster)
+                apt-get update -q -y
+                apt-get install -q -y git
+                ;;
+              fedora*)
+                dnf -y update
+                dnf -y install git which
+                ;;
+              alpine*)
+                apk update
+                apk add git
+                ;;
+            esac
+
+          # Produce a binary artifact and place it in the mounted volume
           run: |
-            echo "yes"
-            uname -a
-            echo wat
-            ls -lah /wat
-            cd /wat
-            /o/jdk/bin/jpackage --name gradle -i /wat/gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
-            pwd
-            who am i
-            echo A
-            ls -lah /o/jdk/bin
-            echo B
-            du -a /o/jdk/bin/
-            echo C
-            du -sh /o/jdk/bin/jpackage
-            file /o/jdk/bin/jpackage
-            echo "where"
-            pwd
-            echo "files"
-            ls -lah
-            echo "find"
-            find / -name gradle
-            /o/jdk/bin/jpackage --name gradle -i /wat/gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.artifact_name }}
-          path: artifacts/${{ env.artifact_name }}
+            cp $(which git) "/artifacts/${artifact_name}"
+            echo "Produced artifact at /artifacts/${artifact_name}"
+
+      - name: Show the artifact
+        # Items placed in /artifacts in the container will be in
+        # ${PWD}/artifacts on the host.
+        run: |
+          ls -al "${PWD}/artifacts"
 
 
   C-stage2:
