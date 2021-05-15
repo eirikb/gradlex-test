@@ -219,6 +219,7 @@ jobs:
             mkdir -p "${PWD}/artifacts"
           dockerRunArgs: |
             --volume "${PWD}/artifacts:/artifacts"
+            --volume "${PWD}:/wat"
           env: |
             artifact_name: ${{ env.artifact_name }}
           shell: /bin/sh
@@ -257,7 +258,9 @@ jobs:
             ls -lah
             echo "find"
             find / -name gradle
-            /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
+            echo wat
+            ls -lah /wat
+            /o/jdk/bin/jpackage --name gradle -i /wat/gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
