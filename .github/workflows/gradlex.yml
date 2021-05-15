@@ -186,7 +186,7 @@ jobs:
       matrix:
         include:
           - arch: aarch64
-            distro: buster
+            distro: ubuntu18.04
     #          - arch: ppc64le
     #            distro: alpine_latest
     #          - arch: s390x
