@@ -228,8 +228,8 @@ jobs:
             echo X
             du -b /o/jdk/bin/jpackage
             echo Y
-            file /o/jdk/bin/jpackage
-            echo Z
+#            file /o/jdk/bin/jpackage
+#            echo Z
             chmod +x /o/jdk/bin/jpackage
             echo GO
             /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
