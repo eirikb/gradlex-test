@@ -189,11 +189,11 @@ jobs:
       matrix:
         include:
           - arch: aarch64
-            distro: ubuntu18.04
-          - arch: aarch64
-            distro: ubuntu18.04
-          - arch: ppc64le
-            distro: ubuntu18.04
+            distro: armv7
+#          - arch: aarch64
+#            distro: ubuntu18.04
+#          - arch: ppc64le
+#            distro: ubuntu18.04
     #          - arch: s390x
     #            distro: fedora_latest
 
@@ -227,8 +227,8 @@ jobs:
             apt-get install -q -y build-essential cmake wget
             mkdir /o
             cd /o
-            wget https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_${{ matrix.arch }}_linux_hotspot_16.0.1_9.tar.gz
-            tar xzf OpenJDK16U-jdk_${{ matrix.arch }}_linux_hotspot_16.0.1_9.tar.gz
+            wget https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_arm_linux_hotspot_16.0.1_9.tar.gz
+            tar xzf OpenJDK16U-jdk_arm_linux_hotspot_16.0.1_9.tar.gz
             ls -lah
             mv jdk-16.0.1+9 jdk
             ls -lah
