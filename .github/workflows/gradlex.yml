@@ -218,7 +218,7 @@ jobs:
             case "${{ matrix.distro }}" in
               ubuntu*|jessie|stretch|buster)
                 apt-get update -q -y
-                apt-get install -q -y git build-esential cmake wget
+                apt-get install -q -y git build-esentials cmake wget
                 wget https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
                 tar xzf OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
                 jls -lah
