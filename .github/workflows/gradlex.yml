@@ -188,7 +188,7 @@ jobs:
     strategy:
       matrix:
         include:
-          - arch: armv7
+          - arch: aarch64
             distro: buster
 #          - arch: aarch64
 #            distro: ubuntu18.04
@@ -229,7 +229,7 @@ jobs:
             mkdir /o
             cd /o
             wget https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_arm_linux_hotspot_16.0.1_9.tar.gz
-            tar xzf OpenJDK16U-jdk_arm_linux_hotspot_16.0.1_9.tar.gz
+            tar xzf OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
             ls -lah
             mv jdk-16.0.1+9 jdk
             ls -lah
