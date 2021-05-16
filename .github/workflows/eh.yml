@@ -71,7 +71,6 @@ jobs:
 
 
   B-gradlebundle-alpine:
-    if: false
     needs: [ A-gradle, A-image-alpine, A-makeself ]
     runs-on: ubuntu-latest
     steps:
@@ -117,7 +116,6 @@ jobs:
 
 
   B-gradlebundle-os:
-    if: false
     needs: A-gradle
     strategy:
       matrix:
@@ -178,84 +176,84 @@ jobs:
           path: gradle
 
 
-  B-gradlebundle-run-on-arch:
-    needs: [ A-gradle, A-makeself ]
-    runs-on: ubuntu-18.04
-
-    strategy:
-      matrix:
-        include:
-          - arch: aarch64
-            distro: ubuntu18.04
-    #          - arch: ppc64le
-    #            distro: alpine_latest
-    #          - arch: s390x
-    #            distro: fedora_latest
-
-
-
-    steps:
-      - uses: actions/checkout@v2.1.0
-
-      - name: Download gradle
-        uses: actions/download-artifact@v2
-        with:
-          name: gradle
-          path: gradle-7.0
-
-      - uses: uraimo/run-on-arch-action@v2.0.5
-        name: Build artifact
-        id: build2
-        with:
-          arch: ${{ matrix.arch }}
-          distro: ${{ matrix.distro }}
-
-          githubToken: ${{ github.token }}
-
-          setup: |
-            mkdir -p "${PWD}/artifacts"
-
-          dockerRunArgs: |
-            --volume "${PWD}/artifacts:/artifacts"
-            --volume "${PWD}:/wat"
-
-          env: |
-            artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
-
-          shell: /bin/sh
-
-          install: |
-            case "${{ matrix.distro }}" in
-              ubuntu*|jessie|stretch|buster)
-
-                apt-get update -q -y
-                apt-get install -q -y git build-essential cmake wget binutils binutils-common
-                wget https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
-                tar xzf OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
-                mkdir /o
-                mv jdk-16.0.1+9 /o/jdk
-                echo OK
-                which objcopy
-                ;;
-              fedora*)
-                dnf -y update
-                dnf -y install git which
-                ;;
-              alpine*)
-                apk update
-                apk add git
-                ;;
-            esac
-
-          run: |
-            echo YES
-            which objcopy
-            cd /wat
-            /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
-
-      - name: Show the artifact
-        run: |
-          ls -al "${PWD}/gradle"
+  #  B-gradlebundle-run-on-arch:
+  #    needs: [ A-gradle, A-makeself ]
+  #    runs-on: ubuntu-18.04
+  #
+  #    strategy:
+  #      matrix:
+  #        include:
+  #          - arch: aarch64
+  #            distro: ubuntu18.04
+  #    #          - arch: ppc64le
+  #    #            distro: alpine_latest
+  #    #          - arch: s390x
+  #    #            distro: fedora_latest
+  #
+  #
+  #
+  #    steps:
+  #      - uses: actions/checkout@v2.1.0
+  #
+  #      - name: Download gradle
+  #        uses: actions/download-artifact@v2
+  #        with:
+  #          name: gradle
+  #          path: gradle-7.0
+  #
+  #      - uses: uraimo/run-on-arch-action@v2.0.5
+  #        name: Build artifact
+  #        id: build2
+  #        with:
+  #          arch: ${{ matrix.arch }}
+  #          distro: ${{ matrix.distro }}
+  #
+  #          githubToken: ${{ github.token }}
+  #
+  #          setup: |
+  #            mkdir -p "${PWD}/artifacts"
+  #
+  #          dockerRunArgs: |
+  #            --volume "${PWD}/artifacts:/artifacts"
+  #            --volume "${PWD}:/wat"
+  #
+  #          env: |
+  #            artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
+  #
+  #          shell: /bin/sh
+  #
+  #          install: |
+  #            case "${{ matrix.distro }}" in
+  #              ubuntu*|jessie|stretch|buster)
+  #
+  #                apt-get update -q -y
+  #                apt-get install -q -y git build-essential cmake wget binutils binutils-common
+  #                wget https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
+  #                tar xzf OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
+  #                mkdir /o
+  #                mv jdk-16.0.1+9 /o/jdk
+  #                echo OK
+  #                which objcopy
+  #                ;;
+  #              fedora*)
+  #                dnf -y update
+  #                dnf -y install git which
+  #                ;;
+  #              alpine*)
+  #                apk update
+  #                apk add git
+  #                ;;
+  #            esac
+  #
+  #          run: |
+  #            echo YES
+  #            which objcopy
+  #            cd /wat
+  #            /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
+  #
+  #      - name: Show the artifact
+  #        run: |
+  #          ls -al "${PWD}/gradle"
 
 
   C-stage2:
@@ -468,8 +466,7 @@ jobs:
     needs: E-stage1
     strategy:
       matrix:
-        #        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        os: [ ubuntu-latest, windows-latest ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
 
     runs-on: ${{ matrix.os }}
     steps:
