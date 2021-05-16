@@ -251,7 +251,7 @@ jobs:
             echo YES
             which objcopy
             cd /wat
-            /o/jdk/bin/jpackage --strip-java-debug-attributes --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
+            /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
 
       - name: Show the artifact
         run: |
