@@ -179,7 +179,6 @@ jobs:
 
 
   B-gradlebundle-run-on-arch:
-    if: false
     needs: [ A-gradle, A-makeself ]
     runs-on: ubuntu-18.04
 
