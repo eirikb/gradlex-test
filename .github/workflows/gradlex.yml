@@ -445,9 +445,13 @@ jobs:
           path: gradlex
 
 
-  F-test-alpine:
+  F-test-docker:
     needs: E-stage1
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        container: [ alpine, debian, fedora ]
+    container: ${{ matrix.container }}
     steps:
       - name: Download gradlex
         uses: actions/download-artifact@v2
@@ -455,18 +459,14 @@ jobs:
           name: gradlex
 
       - name: Run!
-        run: |
-          ls
-          docker run --rm -v $(pwd):/b -w /b alpine ls
-          docker run --rm -v $(pwd):/b -w /b alpine sh gradlex -- --version
+        run: sh gradlex -- --version
 
 
   F-test-os:
     needs: E-stage1
     strategy:
       matrix:
-        #        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        os: [ macos-latest ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
 
     runs-on: ${{ matrix.os }}
     steps:
