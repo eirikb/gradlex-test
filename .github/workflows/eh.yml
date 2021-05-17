@@ -272,7 +272,7 @@ jobs:
         id: cache
         with:
           path: hash
-          key: cscache3_${{ matrix.target }}
+          key: cscache4_${{ matrix.target }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
