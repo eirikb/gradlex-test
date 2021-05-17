@@ -52,6 +52,7 @@ jobs:
 
 
   A-image-alpine:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.1.0
@@ -71,6 +72,7 @@ jobs:
 
 
   B-gradlebundle-alpine:
+    if: false
     needs: [ A-gradle, A-image-alpine, A-makeself ]
     runs-on: ubuntu-latest
     steps:
@@ -119,7 +121,8 @@ jobs:
     needs: A-gradle
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        #        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ macos-latest ]
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -257,7 +260,8 @@ jobs:
 
 
   C-stage2:
-    needs: [ B-gradlebundle-alpine, B-gradlebundle-os ]
+    #    needs: [ B-gradlebundle-alpine, B-gradlebundle-os ]
+    needs: [ B-gradlebundle-os ]
     strategy:
       matrix:
         target: [ alpine, ubuntu-latest, macos-latest, windows-latest ]
@@ -323,6 +327,7 @@ jobs:
 
 
   D-gg-alpine:
+    if: false
     needs: C-stage2
     runs-on: ubuntu-latest
 
@@ -368,7 +373,8 @@ jobs:
     needs: C-stage2
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        #        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ macos-latest ]
 
     runs-on: ${{ matrix.os }}
 
@@ -414,7 +420,8 @@ jobs:
 
 
   E-stage1:
-    needs: [ D-gg-alpine, D-gg-os ]
+    #    needs: [ D-gg-alpine, D-gg-os ]
+    needs: [ D-gg-os ]
     runs-on: ubuntu-18.04
     steps:
       - name: Source
@@ -447,6 +454,7 @@ jobs:
 
 
   F-test-alpine:
+    if: false
     needs: E-stage1
     runs-on: ubuntu-latest
     steps:
@@ -466,7 +474,8 @@ jobs:
     needs: E-stage1
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        #        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ macos-latest ]
 
     runs-on: ${{ matrix.os }}
     steps:
