@@ -264,7 +264,8 @@ jobs:
     needs: [ B-gradlebundle-os ]
     strategy:
       matrix:
-        target: [ alpine, ubuntu-latest, macos-latest, windows-latest ]
+        #        target: [ alpine, ubuntu-latest, macos-latest, windows-latest ]
+        target: [ macos-latest ]
 
     runs-on: ubuntu-latest
     steps:
