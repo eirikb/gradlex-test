@@ -130,7 +130,7 @@ jobs:
         id: cache
         with:
           path: gradle
-          key: bgocache8-${{ matrix.os }}
+          key: bgocache9-${{ matrix.os }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
@@ -164,9 +164,6 @@ jobs:
           mv gradle.app gradle
           mkdir gradle/bin
           echo './.gradle/Contents/MacOS/gradle $1' > gradle/bin/gradle
-          echo "test"
-          chmod +x ./gradle/bin/gradle
-          ./gradle/bin/gradle --version
         if: |
           steps.cache.outputs.cache-hit != 'true' &&
           ( matrix.os == 'macos-latest' )
