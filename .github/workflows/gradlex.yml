@@ -182,7 +182,7 @@ jobs:
       matrix:
         include:
           - arch: aarch64
-            distro: stetch
+            distro: buster
     #          - arch: ppc64le
     #            distro: alpine_latest
     #          - arch: s390x
