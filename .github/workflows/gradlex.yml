@@ -182,7 +182,7 @@ jobs:
       matrix:
         include:
           - arch: aarch64
-            distro: ubuntu18.04
+            distro: jessie
     #          - arch: ppc64le
     #            distro: alpine_latest
     #          - arch: s390x
@@ -201,7 +201,7 @@ jobs:
 
       - uses: uraimo/run-on-arch-action@v2.0.5
         name: Build artifact
-        id: build2
+        id: build3
         with:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
