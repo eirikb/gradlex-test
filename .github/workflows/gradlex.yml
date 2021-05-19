@@ -8,7 +8,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: hello
-          key: hello
+          key: hello2
 
       - run: echo "Hello, world!" > hello
 
@@ -24,4 +24,4 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: hello
-          key: hello
+          key: hello2
