@@ -25,6 +25,3 @@ jobs:
         with:
           path: hello
           key: hello
-
-      - run: cat hello
-        shell: bash
