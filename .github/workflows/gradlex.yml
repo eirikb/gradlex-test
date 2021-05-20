@@ -55,14 +55,14 @@ jobs:
   A-image-alpine:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.1.0
-        if: steps.my-alpine.outputs.cache-hit != 'true'
-
       - uses: actions/cache@v2
         id: my-alpine
         with:
           path: my-alpine.img
           key: my-alpine1
+
+      - uses: actions/checkout@v2.1.0
+        if: steps.my-alpine.outputs.cache-hit != 'true'
 
       - name: Build my-alpine
         if: steps.my-alpine.outputs.cache-hit != 'true'
@@ -75,14 +75,14 @@ jobs:
     needs: [ A-gradle, A-image-alpine, A-makeself ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        if: steps.cache.outputs.cache-hit != 'true'
-
       - uses: actions/cache@v2
         id: cache
         with:
           path: gradle
-          key: gradlebundle_${{ env.b_cache }}
+          key: gradlebundle_${{ env.b_cache }}_alpine
+
+      - uses: actions/checkout@v2
+        if: steps.cache.outputs.cache-hit != 'true'
 
       - uses: actions/cache@v2
         if: steps.cache.outputs.cache-hit != 'true'
