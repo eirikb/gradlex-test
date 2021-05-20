@@ -3,12 +3,12 @@ on: [ push, pull_request ]
 jobs:
 
   write-hello:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/cache@v2
         with:
           path: hello
-          key: hello2
+          key: hello3
 
       - run: echo "Hello, world!" > hello
 
@@ -21,7 +21,11 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
+      - name: "Use GNU tar instead BSD tar"
+        -if matrix.is == windows-latest
+        shell: cmd
+        run: echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
       - uses: actions/cache@v2
         with:
           path: hello
-          key: hello2
+          key: hello3
