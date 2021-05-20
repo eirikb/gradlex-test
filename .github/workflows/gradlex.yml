@@ -110,6 +110,10 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
+      - run: echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
+        if: matrix.os == 'windows-latest'
+#        shell: cmd
+
       - uses: actions/cache@v2
         id: cache
         with:
