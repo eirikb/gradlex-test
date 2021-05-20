@@ -11,7 +11,12 @@ on: [ push, pull_request ]
 
 name: Gradlex!
 env:
-  cacheid: 1
+  a_cache: 1
+  b_cache: 1
+  c_cache: 1
+  d_cache: 1
+  e_cache: 1
+
 jobs:
 
   A-gradle:
@@ -21,7 +26,7 @@ jobs:
         id: cache
         with:
           path: gradle-7.0
-          key: gradle_${{ env.cacheid }}
+          key: gradle_${{ env.a_cache }}
 
       - name: Download and unzip Gradle
         if: steps.cache.outputs.cache-hit != 'true'
@@ -77,13 +82,13 @@ jobs:
         id: cache
         with:
           path: gradle
-          key: gradlebundle1-alpine
+          key: gradlebundle_${{ env.b_cache }}
 
       - uses: actions/cache@v2
         if: steps.cache.outputs.cache-hit != 'true'
         with:
           path: gradle-7.0
-          key: gradle_${{ env.cacheid }}
+          key: gradle_${{ env.a_cache }}
 
       - uses: actions/cache@v2
         if: steps.cache.outputs.cache-hit != 'true'
@@ -120,7 +125,7 @@ jobs:
         id: cache
         with:
           path: gradle
-          key: gradlebundle1-${{ matrix.os }}
+          key: gradlebundle_${{ env.b_cache }}_${{ matrix.os }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
@@ -129,7 +134,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         with:
           path: gradle-7.0
-          key: gradle1
+          key: gradle_${{ env.a_cache }}
 
       - uses: actions/setup-java@v2
         if: steps.cache.outputs.cache-hit != 'true'
@@ -181,7 +186,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         with:
           path: gradlebundle_${{ matrix.target }}
-          key: gradlebundle1_${{ matrix.target }}
+          key: gradlebundle_${{ env.b_cache }}_${{ matrix.target }}
 
       - uses: actions/cache@v2
         if: steps.cache.outputs.cache-hit != 'true'
