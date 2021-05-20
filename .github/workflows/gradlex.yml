@@ -10,6 +10,8 @@ on: [ push, pull_request ]
 # G: Create release
 
 name: Gradlex!
+env:
+  cacheid: 1
 jobs:
 
   A-gradle:
@@ -19,7 +21,7 @@ jobs:
         id: cache
         with:
           path: gradle-7.0
-          key: gradle1
+          key: gradle_${{ env.cacheid }}
 
       - name: Download and unzip Gradle
         if: steps.cache.outputs.cache-hit != 'true'
@@ -81,7 +83,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         with:
           path: gradle-7.0
-          key: gradle1
+          key: gradle_${{ env.cacheid }}
 
       - uses: actions/cache@v2
         if: steps.cache.outputs.cache-hit != 'true'
