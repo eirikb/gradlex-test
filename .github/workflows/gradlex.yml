@@ -19,19 +19,13 @@ jobs:
         id: cache
         with:
           path: gradle-7.0
-          key: agcache1
+          key: gradle1
 
       - name: Download and unzip Gradle
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           wget https://services.gradle.org/distributions/gradle-7.0-bin.zip
           unzip gradle-7.0-bin.zip
-
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: gradle
-#          path: gradle-7.0
 
 
   A-makeself:
@@ -41,7 +35,7 @@ jobs:
         id: makeself
         with:
           path: makeself
-          key: makeself
+          key: makeself1
 
       - name: Install makeself
         if: steps.cache.outputs.cache-hit != 'true' && steps.makeselfcache.outputs.cache-hit != 'true'
@@ -61,7 +55,7 @@ jobs:
         id: my-alpine
         with:
           path: my-alpine.img
-          key: my-alpine4
+          key: my-alpine1
 
       - name: Build my-alpine
         if: steps.my-alpine.outputs.cache-hit != 'true'
@@ -81,14 +75,13 @@ jobs:
         id: cache
         with:
           path: gradle
-          key: bgacache8
+          key: gradlebundle1-alpine
 
-#      - name: Download gradle
-#        if: steps.cache.outputs.cache-hit != 'true'
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: gradle
-#          path: gradle-7.0
+      - uses: actions/cache@v2
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          path: gradle-7.0
+          key: gradle1
 
       - uses: actions/cache@v2
         if: steps.cache.outputs.cache-hit != 'true'
@@ -108,12 +101,6 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: docker run --rm -u $(id -u) -v $(pwd):/b my-alpine ./gradle/bin/gradle --version
 
-#      - name: Upload gradle bundle artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: gradlebundle_alpine
-#          path: gradle
-
 
   B-gradlebundle-os:
     needs: A-gradle
@@ -127,17 +114,16 @@ jobs:
         id: cache
         with:
           path: gradle
-          key: bgocache13-${{ matrix.os }}
+          key: gradlebundle1-${{ matrix.os }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
 
-#      - name: Download gradle
-#        if: steps.cache.outputs.cache-hit != 'true'
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: gradle
-#          path: gradle-7.0
+      - uses: actions/cache@v2
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          path: gradle-7.0
+          key: gradle1
 
       - uses: actions/setup-java@v2
         if: steps.cache.outputs.cache-hit != 'true'
@@ -167,94 +153,6 @@ jobs:
           ( matrix.os == 'macos-latest' )
         shell: bash
 
-#      - name: Upload gradle bundle artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: gradlebundle_${{ matrix.os }}
-#          path: gradle
-
-
-  # This part is for ARM. Wish it would work, but Gradle won't build! gradlex works though, FWIW
-  #  B-gradlebundle-run-on-arch:
-  #    needs: [ A-gradle, A-makeself ]
-  #    runs-on: ubuntu-18.04
-  #
-  #    strategy:
-  #      matrix:
-  #        include:
-  #          - arch: aarch64
-  #            distro: ubuntu18.04
-  #    #          - arch: ppc64le
-  #    #            distro: alpine_latest
-  #    #          - arch: s390x
-  #    #            distro: fedora_latest
-  #
-  #
-  #
-  #    steps:
-  #      - uses: actions/checkout@v2.1.0
-  #
-  #      - name: Download gradle
-  #        uses: actions/download-artifact@v2
-  #        with:
-  #          name: gradle
-  #          path: gradle-7.0
-  #
-  #      - uses: uraimo/run-on-arch-action@v2.0.5
-  #        name: Build artifact
-  #        id: build2
-  #        with:
-  #          arch: ${{ matrix.arch }}
-  #          distro: ${{ matrix.distro }}
-  #
-  #          githubToken: ${{ github.token }}
-  #
-  #          setup: |
-  #            mkdir -p "${PWD}/artifacts"
-  #
-  #          dockerRunArgs: |
-  #            --volume "${PWD}/artifacts:/artifacts"
-  #            --volume "${PWD}:/wat"
-  #
-  #          env: |
-  #            artifact_name: git-${{ matrix.distro }}_${{ matrix.arch }}
-  #
-  #          shell: /bin/sh
-  #
-  #          install: |
-  #            case "${{ matrix.distro }}" in
-  #              ubuntu*|jessie|stretch|buster)
-  #
-  #                apt-get update -q -y
-  #                apt-get install -q -y git build-essential cmake wget binutils binutils-common
-  #                wget https://github.com/AdoptOpenJDK/openjdk16-binaries/releases/download/jdk-16.0.1%2B9/OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
-  #                tar xzf OpenJDK16U-jdk_aarch64_linux_hotspot_16.0.1_9.tar.gz
-  #                mkdir /o
-  #                mv jdk-16.0.1+9 /o/jdk
-  #                echo OK
-  #                which objcopy
-  #                ;;
-  #              fedora*)
-  #                dnf -y update
-  #                dnf -y install git which
-  #                ;;
-  #              alpine*)
-  #                apk update
-  #                apk add git
-  #                ;;
-  #            esac
-  #
-  #          run: |
-  #            echo YES
-  #            which objcopy
-  #            cd /wat
-  #            /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
-  #
-  #      - name: Show the artifact
-  #        run: |
-  #          ls -al "${PWD}/gradle"
-
-
 
   C-stage2:
     needs: [ B-gradlebundle-alpine, B-gradlebundle-os ]
@@ -268,17 +166,16 @@ jobs:
         id: cache
         with:
           path: hash
-          key: cscache8_${{ matrix.target }}
+          key: hash1_${{ matrix.target }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
 
-#      - name: Download gradlebundle
-#        if: steps.cache.outputs.cache-hit != 'true'
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: gradlebundle_${{ matrix.target }}
-#          path: gradle
+      - uses: actions/cache@v2
+        if: steps.cache.outputs.cache-hit != 'true'
+        with:
+          path: gradlebundle_${{ matrix.target }}
+          key: gradlebundle_${{ matrix.target }}
 
       - uses: actions/cache@v2
         if: steps.cache.outputs.cache-hit != 'true'
@@ -300,12 +197,6 @@ jobs:
         run: |
           gcc -o print_hash print_hash.c
           ./print_hash gradlex2 > hash
-
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: hash_${{ matrix.target }}
-#          path: hash
 
       - name: Rename to hash
         if: steps.cache.outputs.cache-hit != 'true'
@@ -357,12 +248,6 @@ jobs:
       - name: Rename
         run: mv build/gg ./${{ env.artifact_name }}
 
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: ${{ env.artifact_name }}
-#          path: ${{ env.artifact_name }}
-
 
   D-gg-os:
     needs: C-stage2
@@ -377,12 +262,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-
-#      - name: Download gg
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: hash_${{ matrix.os }}
-#          path: hash
 
       - name: Hash
         # ENV -> CMAKE -> Code very hard. This very easy
@@ -406,12 +285,6 @@ jobs:
             mv build/Debug/gg.exe ./${{ env.artifact_name }}
           fi
 
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: ${{ env.artifact_name }}
-#          path: ${{ env.artifact_name }}
-
 
   E-stage1:
     needs: [ D-gg-alpine, D-gg-os ]
@@ -419,9 +292,6 @@ jobs:
     steps:
       - name: Source
         uses: actions/checkout@v2.1.0
-
-#      - name: Download gg
-#        uses: actions/download-artifact@v2
 
       - uses: actions/cache@v2
         with:
@@ -439,12 +309,6 @@ jobs:
           cp stage1.sh yes
           ./makeself/makeself.sh yes gradlex gradlex sh stage1.sh
 
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: gradlex
-#          path: gradlex
-
 
   F-test-docker:
     needs: E-stage1
@@ -454,11 +318,6 @@ jobs:
         container: [ alpine, debian, fedora ]
     container: ${{ matrix.container }}
     steps:
-#      - name: Download gradlex
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: gradlex
-
       - name: Run!
         run: sh gradlex -- --version
 
@@ -471,11 +330,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
-#      - name: Download gradlex
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: gradlex
-
       - name: Run!
         run: |
           sh gradlex -- --version
@@ -504,11 +358,6 @@ jobs:
           draft: false
           prerelease: false
 
-#      - name: Download gradlex
-#        uses: actions/download-artifact@v2
-#        with:
-#          name: gradlex
-#
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
