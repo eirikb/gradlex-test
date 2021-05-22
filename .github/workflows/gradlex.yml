@@ -341,9 +341,6 @@ jobs:
 
       - name: Download gg
         uses: actions/download-artifact@v2
-        with:
-          name: hash_${{ env.c_cache }}_${{ matrix.os }}
-          path: hash
 
       - uses: actions/cache@v2
         name: 'Cache: makeself_${{ env.a_cache }}'
