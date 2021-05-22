@@ -21,7 +21,7 @@ jobs:
 
   A-gradle:
     env:
-      cache: 'gradle_${{ env.a_cache }}'
+      cache: 'gradle_${{ a_cache }}'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/cache@v2
