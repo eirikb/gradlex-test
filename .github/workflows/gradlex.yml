@@ -93,7 +93,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         with:
           path: gradle-7.0
-          key: gradle_${{ env.a_cache }}_alpine
+          key: gradle_${{ env.a_cache }}
 
       - uses: actions/cache@v2
         name: 'Cache: alpine_${{ env.a_cache }}'
