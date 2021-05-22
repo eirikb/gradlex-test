@@ -245,11 +245,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Download stage 2
-        uses: actions/download-artifact@v2
+      - uses: actions/cache@v2
+        name: 'Cache: hash_${{ env.b_cache }}_alpine'
         with:
-          name: hash_alpine
           path: hash
+          key: hash_${{ env.b_cache }}_alpine
 
       - name: Hash
         shell: bash
@@ -287,6 +287,12 @@ jobs:
       - run: echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
         if: matrix.os == 'windows-latest'
         shell: cmd
+
+      - uses: actions/cache@v2
+        name: 'Cache: hash_${{ env.b_cache }}_${{ env.b_cache }}'
+        with:
+          path: hash
+          key: hash_${{ env.b_cache }}_${{ env.b_cache }}
 
       - uses: actions/checkout@v2
 
