@@ -173,11 +173,15 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - run: echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
+        if: matrix.target == 'windows-latest'
+        shell: cmd
+
       - uses: actions/cache@v2
         id: cache
         with:
           path: hash
-          key: hash1_${{ matrix.target }}
+          key: hash_${{ env.c_cace }}_${{ matrix.target }}
 
       - uses: actions/checkout@v2.1.0
         if: steps.cache.outputs.cache-hit != 'true'
@@ -272,6 +276,10 @@ jobs:
       artifact_name: gg_${{ matrix.os }}_x86
 
     steps:
+      - run: echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
+        if: matrix.os == 'windows-latest'
+        shell: cmd
+
       - uses: actions/checkout@v2
 
       - name: Hash

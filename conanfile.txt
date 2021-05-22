@@ -1,0 +1,5 @@
+[requires]
+mbedtls/2.25.0
+
+[generators]
+cmake
