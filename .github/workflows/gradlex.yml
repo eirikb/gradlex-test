@@ -59,19 +59,19 @@ jobs:
     steps:
       - uses: actions/cache@v2
         name: 'Cache: alpine_${{ env.a_cache }}'
-        id: my-alpine
+        id: cache
         with:
-          path: my-alpine.img
-          key: my-alpine_${{ env.a_cache }}
+          path: my_alpine.img
+          key: my_alpine_${{ env.a_cache }}
 
       - uses: actions/checkout@v2.1.0
-        if: steps.my-alpine.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true'
 
-      - name: Build my-alpine
-        if: steps.my-alpine.outputs.cache-hit != 'true'
+      - name: Build my_alpine
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          docker build my-alpine -t my-alpine
-          docker save -o my-alpine.img my-alpine
+          docker build my_alpine -t my_alpine
+          docker save -o my_alpine.img my_alpine
 
 
   B-gradlebundle-alpine:
@@ -99,20 +99,20 @@ jobs:
         name: 'Cache: alpine_${{ env.a_cache }}'
         if: steps.cache.outputs.cache-hit != 'true'
         with:
-          path: my-alpine.img
-          key: alpine_${{ env.a_cache }}
+          path: my_alpine.img
+          key: my_alpine_${{ env.a_cache }}
 
-      - run: docker load -i my-alpine.img
+      - run: docker load -i my_alpine.img
         if: steps.cache.outputs.cache-hit != 'true'
 
       - name: Build!
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          docker run --rm -u $(id -u) -v $(pwd):/b my-alpine /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
+          docker run --rm -u $(id -u) -v $(pwd):/b my_alpine /o/jdk/bin/jpackage --name gradle -i gradle-7.0/lib --type app-image --main-jar gradle-launcher-7.0.jar
 
       - name: Test build
         if: steps.cache.outputs.cache-hit != 'true'
-        run: docker run --rm -u $(id -u) -v $(pwd):/b my-alpine ./gradle/bin/gradle --version
+        run: docker run --rm -u $(id -u) -v $(pwd):/b my_alpine ./gradle/bin/gradle --version
 
 
   B-gradlebundle-os:
@@ -258,15 +258,15 @@ jobs:
           echo "const char *hash = \"$hash\";" > const.h
 
       - uses: actions/cache@v2
-        name: 'Cache: my-alpine_${{ env.a_cache }}'
+        name: 'Cache: my_alpine_${{ env.a_cache }}'
         with:
-          path: my-alpine.img
-          key: my-alpine_${{ env.a_cache }}
+          path: my_alpine.img
+          key: my_alpine_${{ env.a_cache }}
 
-      - run: docker load -i my-alpine.img
+      - run: docker load -i my_alpine.img
 
       - name: Build!
-        run: docker run --rm -u $(id -u) -v $(pwd):/b my-alpine sh build-stage1.sh
+        run: docker run --rm -u $(id -u) -v $(pwd):/b my_alpine sh build-stage1.sh
 
       - name: Rename
         run: mv build/gg ./${{ env.artifact_name }}
