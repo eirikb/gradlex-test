@@ -20,14 +20,16 @@ env:
 jobs:
 
   A-gradle:
+    env:
+      cache: gradle_${{ env.a_cache }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/cache@v2
-        name: 'Cache: gradle_${{ env.a_cache }}'
+        name: 'Cache: ${{ env.cache }}'
         id: cache
         with:
           path: gradle-7.0
-          key: gradle_${{ env.a_cache }}
+          key: ${{ env.cache }}
 
       - name: Download and unzip Gradle
         if: steps.cache.outputs.cache-hit != 'true'
@@ -40,6 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/cache@v2
+        name: 'Cache: makeself'
         id: makeself
         with:
           path: makeself
@@ -57,6 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/cache@v2
+        name: 'Cache: alpine'
         id: my-alpine
         with:
           path: my-alpine.img
@@ -77,6 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/cache@v2
+        name: 'Cache gradlebundle_${{ env.b_cache }}'
         id: cache
         with:
           path: gradle
@@ -123,6 +128,7 @@ jobs:
         shell: cmd
 
       - uses: actions/cache@v2
+        name: 'Cache: gradlebundle_${{ env.b_cache }}
         id: cache
         with:
           path: gradle
