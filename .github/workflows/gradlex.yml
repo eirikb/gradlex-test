@@ -256,7 +256,7 @@ jobs:
       - name: Hash
         shell: bash
         run: |
-          hash=$(cat hash/hash)
+          hash=$(cat hash)
           echo "const char *hash = \"$hash\";" > const.h
 
       - uses: actions/cache@v2
@@ -302,7 +302,7 @@ jobs:
         # ENV -> CMAKE -> Code very hard. This very easy
         shell: bash
         run: |
-          hash=$(cat hash/hash)
+          hash=$(cat hash)
           echo "const char *hash = \"$hash\";" > const.h
 
       - name: Configure CMake
