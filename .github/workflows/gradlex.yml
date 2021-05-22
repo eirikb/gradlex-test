@@ -290,18 +290,19 @@ jobs:
         if: matrix.os == 'windows-latest'
         shell: cmd
 
+      - uses: actions/checkout@v2
+
       - uses: actions/cache@v2
         name: 'Cache: hash_${{ env.c_cache }}_${{ matrix.os }}'
         with:
           path: hash
           key: hash_${{ env.c_cache }}_${{ matrix.os }}
 
-      - uses: actions/checkout@v2
-
       - name: Hash
         # ENV -> CMAKE -> Code very hard. This very easy
         shell: bash
         run: |
+          du -a .
           hash=$(cat hash)
           echo "const char *hash = \"$hash\";" > const.h
 
