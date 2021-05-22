@@ -181,10 +181,6 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - run: echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
-        if: matrix.target == 'windows-latest'
-        shell: cmd
-
       - uses: actions/cache@v2
         name: 'Cache: hash_${{ env.c_cache }}_${{ matrix.target }}'
         id: cache
