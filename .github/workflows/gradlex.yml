@@ -251,6 +251,8 @@ jobs:
           path: hash
           key: hash_${{ env.c_cache }}_alpine
 
+      - run: du -a .
+
       - name: Hash
         shell: bash
         run: |
