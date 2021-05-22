@@ -360,6 +360,13 @@ jobs:
           ./makeself/makeself.sh yes gradlex gradlex sh stage1.sh
 
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: gradlex
+          path: gradlex
+
+
   F-test-docker:
     needs: E-stage1
     runs-on: ubuntu-latest
@@ -368,6 +375,11 @@ jobs:
         container: [ alpine, debian, fedora ]
     container: ${{ matrix.container }}
     steps:
+      - name: Download gradlex
+        uses: actions/download-artifact@v2
+        with:
+          name: gradlex
+
       - name: Run!
         run: sh gradlex -- --version
 
@@ -380,6 +392,11 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Download gradlex
+        uses: actions/download-artifact@v2
+        with:
+          name: gradlex
+
       - name: Run!
         run: |
           sh gradlex -- --version
