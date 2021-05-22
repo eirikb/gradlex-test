@@ -251,7 +251,11 @@ jobs:
           path: hash
           key: hash_${{ env.c_cache }}_alpine
 
-      - run: du -a .
+      - uses: actions/cache@v2
+        name: 'Cache: ${{ env.artifact_name }}'
+        with:
+          path: ${{ env.artifact_name }}
+          key: ${{ env.artifact_name }}
 
       - name: Hash
         shell: bash
@@ -298,6 +302,12 @@ jobs:
           path: hash
           key: hash_${{ env.c_cache }}_${{ matrix.os }}
 
+      - uses: actions/cache@v2
+        name: 'Cache: ${{ env.artifact_name }}'
+        with:
+          path: ${{ env.artifact_name }}
+          key: ${{ env.artifact_name }}
+
       - name: Hash
         # ENV -> CMAKE -> Code very hard. This very easy
         shell: bash
@@ -328,6 +338,12 @@ jobs:
     steps:
       - name: Source
         uses: actions/checkout@v2.1.0
+
+      - uses: actions/cache@v2
+        name: 'Cache: gg*'
+        with:
+          path: gg*
+          key: gg*
 
       - uses: actions/cache@v2
         name: 'Cache: makeself_${{ env.a_cache }}'
