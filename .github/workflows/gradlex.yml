@@ -251,12 +251,6 @@ jobs:
           path: hash
           key: hash_${{ env.c_cache }}_alpine
 
-      - uses: actions/cache@v2
-        name: 'Cache: ${{ env.artifact_name }}'
-        with:
-          path: ${{ env.artifact_name }}
-          key: ${{ env.artifact_name }}
-
       - name: Hash
         shell: bash
         run: |
@@ -276,6 +270,12 @@ jobs:
 
       - name: Rename
         run: mv build/gg ./${{ env.artifact_name }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.artifact_name }}
+          path: ${{ env.artifact_name }}
 
 
   D-gg-os:
@@ -302,12 +302,6 @@ jobs:
           path: hash
           key: hash_${{ env.c_cache }}_${{ matrix.os }}
 
-      - uses: actions/cache@v2
-        name: 'Cache: ${{ env.artifact_name }}'
-        with:
-          path: ${{ env.artifact_name }}
-          key: ${{ env.artifact_name }}
-
       - name: Hash
         # ENV -> CMAKE -> Code very hard. This very easy
         shell: bash
@@ -331,6 +325,12 @@ jobs:
             mv build/Debug/gg.exe ./${{ env.artifact_name }}
           fi
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.artifact_name }}
+          path: ${{ env.artifact_name }}
+
 
   E-stage1:
     needs: [ D-gg-alpine, D-gg-os ]
@@ -339,11 +339,11 @@ jobs:
       - name: Source
         uses: actions/checkout@v2.1.0
 
-      - uses: actions/cache@v2
-        name: 'Cache: gg*'
+      - name: Download gg
+        uses: actions/download-artifact@v2
         with:
-          path: gg*
-          key: gg*
+          name: hash_${{ matrix.os }}
+          path: hash
 
       - uses: actions/cache@v2
         name: 'Cache: makeself_${{ env.a_cache }}'
